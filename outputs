@@ -1,0 +1,143 @@
+[
+  {
+    "id": "R1",
+    "decision": "block",
+    "applied_policies": [
+      "MED_STRICT",
+      "MED_BLOCK"
+    ],
+    "final_output": "",
+    "reason": "Policy MED_BLOCK: Confidence 0.96 >= 0.0, applying BLOCK"
+  },
+  {
+    "id": "R2",
+    "decision": "block",
+    "applied_policies": [
+      "MED_STRICT",
+      "MED_BLOCK"
+    ],
+    "final_output": "",
+    "reason": "Policy MED_STRICT: Confidence 0.82 < 0.95, escalated from ESCALATE to BLOCK"
+  },
+  {
+    "id": "R3",
+    "decision": "block",
+    "applied_policies": [
+      "MED_STRICT",
+      "MED_BLOCK"
+    ],
+    "final_output": "",
+    "reason": "Policy MED_STRICT: Confidence 0.6 < 0.95, escalated from ESCALATE to BLOCK"
+  },
+  {
+    "id": "R4",
+    "decision": "sanitize",
+    "applied_policies": [
+      "FIN_STRICT",
+      "FIN_RELAXED"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy FIN_STRICT: Confidence 0.93 >= 0.9, applying SANITIZE"
+  },
+  {
+    "id": "R5",
+    "decision": "escalate",
+    "applied_policies": [
+      "FIN_STRICT",
+      "FIN_RELAXED"
+    ],
+    "final_output": "Sent for human review.",
+    "reason": "Policy FIN_STRICT: Confidence 0.88 < 0.9, escalated from SANITIZE to ESCALATE"
+  },
+  {
+    "id": "R6",
+    "decision": "escalate",
+    "applied_policies": [
+      "FIN_STRICT",
+      "FIN_RELAXED"
+    ],
+    "final_output": "Sent for human review.",
+    "reason": "Policy FIN_STRICT: Confidence 0.81 < 0.9, escalated from SANITIZE to ESCALATE"
+  },
+  {
+    "id": "R7",
+    "decision": "escalate",
+    "applied_policies": [
+      "FIN_STRICT",
+      "FIN_RELAXED"
+    ],
+    "final_output": "Sent for human review.",
+    "reason": "Policy FIN_STRICT: Confidence 0.65 < 0.9, escalated from SANITIZE to ESCALATE"
+  },
+  {
+    "id": "R8",
+    "decision": "sanitize",
+    "applied_policies": [
+      "GEN_ALLOW",
+      "GEN_SANITIZE"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy GEN_SANITIZE: Confidence 0.92 >= 0.0, applying SANITIZE"
+  },
+  {
+    "id": "R9",
+    "decision": "sanitize",
+    "applied_policies": [
+      "GEN_ALLOW",
+      "GEN_SANITIZE"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy GEN_SANITIZE: Confidence 0.75 >= 0.0, applying SANITIZE"
+  },
+  {
+    "id": "R10",
+    "decision": "sanitize",
+    "applied_policies": [
+      "GEN_ALLOW",
+      "GEN_SANITIZE"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy GEN_ALLOW: Confidence 0.55 < 0.7, escalated from ALLOW to SANITIZE"
+  },
+  {
+    "id": "R11",
+    "decision": "sanitize",
+    "applied_policies": [
+      "GEN_ALLOW",
+      "GEN_SANITIZE"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy GEN_ALLOW: Confidence 0.4 < 0.7, escalated from ALLOW to SANITIZE"
+  },
+  {
+    "id": "R12",
+    "decision": "sanitize",
+    "applied_policies": [
+      "GEN_ALLOW",
+      "GEN_SANITIZE"
+    ],
+    "final_output": "This response cannot be shown. Please consult a qualified professional.",
+    "reason": "Policy GEN_ALLOW: Confidence 0.2 < 0.7, escalated from ALLOW to SANITIZE"
+  },
+  {
+    "id": "R13",
+    "decision": "block",
+    "applied_policies": [],
+    "final_output": "",
+    "reason": "No policy matched risk 'unknown'. Default action applied."
+  },
+  {
+    "id": "R14",
+    "decision": "block",
+    "applied_policies": [],
+    "final_output": "",
+    "reason": "No policy matched risk 'unknown'. Default action applied."
+  },
+  {
+    "id": "R15",
+    "decision": "block",
+    "applied_policies": [],
+    "final_output": "",
+    "reason": "No policy matched risk 'unknown'. Default action applied."
+  }
+]
