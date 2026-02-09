@@ -1,81 +1,39 @@
-import json
-import os
-from typing import List, Dict, Any
+# Guardrail Engine
 
-from src.engine.types import Action, InputItem, Policy, PolicyResult
-from src.engine.loader import load_policies
-from src.engine.matcher import match_policies
-from src.engine.resolver import resolve_policy, resolve_conflict, apply_action, HIERARCHY
+This project implements a deterministic Guardrail Engine that processes user inputs against a set of safety policies. It matches input risks to policies, resolves conflicts based on a strict hierarchy, and determines the final action (Allow, Sanitize, Escalate, Block).
 
-def main():
-    # Paths
-    base_dir = os.path.dirname(os.path.abspath(__file__))
-    # Data is located in src/data
-    data_dir = os.path.join(base_dir, "src", "data")
-    
-    input_path = os.path.join(data_dir, "input.json")
-    policies_path = os.path.join(data_dir, "policies.json")
-    output_path = os.path.join(data_dir, "output.json")
-    
-    # Load Data
-    try:
-        policies, default_action_str = load_policies(policies_path)
-        with open(input_path, 'r') as f:
-            input_data = json.load(f)
-    except Exception as e:
-        print(f"Error loading data: {e}")
-        return
+## How to Run
 
-    default_action = Action[default_action_str.upper()]
-    results = []
+1.  **Prerequisites**: Python 3.8+
+2.  **Clone the repository**:
+    ```bash
+    git clone <repository_url>
+    cd guardrail-engine
+    ```
+3.  **Run the engine**:
+    ```bash
+    python3 main.py
+    ```
+4.  **Check Output**:
+    The results will be generated in `src/data/output.json`.
 
-    for item in input_data:
-        input_item = InputItem(
-            id=item["id"],
-            risk=item.get("risk", "unknown"),
-            output=item["output"],
-            confidence=item["confidence"]
-        )
-        
-        # Match Policies
-        matched_policies = match_policies(input_item, policies)
-        
-        final_decision: Action = default_action
-        final_reason: str = f"No policy matched risk '{input_item.risk}'. Default action applied."
-        applied_policies_ids: List[str] = []
-        
-        if matched_policies:
-            policy_results = []
-            for policy in matched_policies:
-                res = resolve_policy(policy, input_item.confidence)
-                policy_results.append(res)
-                
-            # Resolve Conflict
-            if policy_results:
-                final_result = resolve_conflict(policy_results)
-                if final_result:
-                    final_decision = final_result.action
-                    final_reason = final_result.reason
-                    applied_policies_ids = [r.policy_id for r in policy_results]
-        
-        # Apply Action
-        final_output_text = apply_action(final_decision, input_item.output)
-        
-        # Construct Result
-        result_entry = {
-            "id": input_item.id,
-            "decision": final_decision.name.lower(),
-            "applied_policies": applied_policies_ids,
-            "final_output": final_output_text,
-            "reason": final_reason
-        }
-        results.append(result_entry)
-        
-    # Write Output
-    with open(output_path, 'w') as f:
-        json.dump(results, f, indent=2)
-        
-    print(f"Processed {len(results)} items. Output written to {output_path}")
+## Project Structure
 
-if __name__ == "__main__":
-    main()
+-   `main.py`: Entry point for the application.
+-   `src/engine/`: Core logic modules (loader, matcher, resolver, types).
+-   `src/data/`: Input data (`input.json`), policy definitions (`policies.json`), and results (`output.json`).
+
+## Assumptions
+
+1.  **Input Format**: inputs are provided in a JSON list format with `id`, `risk`, `confidence`, and `output` fields.
+2.  **Policy Definitions**: Policies define a `risk` type, `allowed_actions`, and a `min_confidence` threshold.
+3.  **Hierarchy**: The action hierarchy is strictly defined as `Block > Escalate > Sanitize > Allow`.
+4.  **Escalation**: If a policy matches but confidence is below the threshold, the action is automatically escalated to the next verified restrictive level (as per `resolver.py` logic).
+5.  **Default Action**: If no policy matches an input's risk, the default action specified in `policies.json` is applied.
+
+## Tradeoffs
+
+1.  **Determinism vs. Flexibility**: The engine prioritizes deterministic behavior (strict hierarchy, consistent tie-breaking) over complex, context-aware decision making. This ensures predictability but limits nuance.
+2.  **Performance**: The current implementation loads policies and processes inputs sequentially. For extremely large datasets, parallel processing or streaming inputs would be more efficient.
+3.  **Hardcoded Hierarchy**: The action hierarchy is hardcoded in `resolver.py`. Making this configuration-driven would increase flexibility but add complexity.
+4.  **JSON Storage**: Using JSON files for data and policies is simple for this exercise but would likely be replaced by a database in a production environment for better scalability and query capabilities.
